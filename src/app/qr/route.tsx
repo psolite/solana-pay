@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { clusterApiUrl, Connection, PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
-import { createSplTransferIx } from '@/component/transfer';
+import { createSplTransferIx } from '@/component/transfert2';
 
 export async function GET(request: Request) {
     try {
@@ -40,22 +40,11 @@ export async function POST(request: Request) {
         const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
         const recentBlockhash = await connection.getLatestBlockhash();
 
-        // create spl transfer instruction
-        const splTransferIx = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(100000));
+        // create spl transfer
+        const serializedTransaction = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(100000));
         console.log('splTransferIx passed');
-        // create the transaction
-        const transaction = new VersionedTransaction(
-            new TransactionMessage({
-                payerKey: sender,
-                recentBlockhash: recentBlockhash.blockhash,
-                // add the instruction to the transaction
-                instructions: [splTransferIx]
-            }).compileToV0Message()
-        )
-        console.log('transaction passed');
-        const serializedTransaction = transaction.serialize()
 
-        const base64Transaction = Buffer.from(serializedTransaction).toString('base64');
+        const base64Transaction = serializedTransaction.toString('base64');
         const message = 'Thank you for your purchase!';
         console.log('base64Transaction passed');
 
