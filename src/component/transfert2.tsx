@@ -43,6 +43,7 @@ export async function createSplTransferIx(sender: PublicKey, connection: Connect
 
     const latestBlockHash = await connection.getLatestBlockhash({ commitment: "finalized" });
     transaction.recentBlockhash = latestBlockHash.blockhash;
+    transaction.feePayer = sender;
 
     const serializedTransaction = transaction.serialize({
         requireAllSignatures: false,
