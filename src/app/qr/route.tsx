@@ -8,8 +8,8 @@ export async function GET(request: Request) {
         console.log(request);
         // Example response for GET request
 
-        const label = 'Exiled Apes Academy';
-        const icon = 'https://exiledapes.academy/wp-content/uploads/2021/09/X_share.png';
+        const label = 'Airbills';
+        const icon = 'https://app.airbillspay.com/favicon.ico';
 
         const data = {
             label,
