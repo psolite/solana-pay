@@ -15,6 +15,7 @@ export async function GET(request: Request) {
       
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
+        console.error('Error processing GET request:', error);
         return NextResponse.json({ error: 'Failed to process GET request' }, { status: 500 });
     }
 }
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
         const data = { message: 'POST request successful', receivedData: body };
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
+        console.error('Error processing POST request:', error);
         return NextResponse.json({ error: 'Failed to process POST request' }, { status: 500 });
     }
 }
