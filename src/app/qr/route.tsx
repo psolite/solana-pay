@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clusterApiUrl, Connection, Keypair, PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
+import { clusterApiUrl, Connection, PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { createSplTransferIx } from '@/component/transfer';
 
