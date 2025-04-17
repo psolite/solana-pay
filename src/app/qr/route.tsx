@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
-import { createSplTransferIx } from '@/component/transfert2';
+import { createSplTransferIx } from '@/component/transfer';
 
 export async function GET(request: Request) {
     try {
@@ -36,10 +36,9 @@ export async function POST(request: Request) {
         if (!accountField) throw new Error('missing account');
 
         const sender = new PublicKey(accountField);
-        const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
 
         // create spl transfer
-        const serializedTransaction = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET);
+        const serializedTransaction = await createSplTransferIx(sender, splToken, MERCHANT_WALLET);
         console.log('splTransferIx passed');
 
         const base64Transaction = serializedTransaction.toString('base64');
