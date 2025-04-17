@@ -4,7 +4,7 @@
 import { useEffect, useRef } from 'react';
 import { createQR } from '@solana/pay';
 
-const url = "solana:http://10.255.255.254:3000/qr/"; // Replace with your actual URL
+const url = "solana:https://solana-pay-jade.vercel.app/qr/"; // Replace with your actual URL
 
 export default function Home() {
   const mintQrRef = useRef<HTMLDivElement>(null);
