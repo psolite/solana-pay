@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
-import BigNumber from 'bignumber.js';
 import { createSplTransferIx } from '@/component/transfert2';
 
 export async function GET(request: Request) {
