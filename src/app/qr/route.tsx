@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import { createSplTransferIx } from '@/component/transfer';
 
 export async function GET(request: Request) {
