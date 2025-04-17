@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     const splToken = new PublicKey(USDC_MINT);
     const MERCHANT_WALLET = new PublicKey(MERCHANT);
     try {
+        console.log('started processing POST request');
         const body = await request.json();
 
         const accountField = body?.account;
@@ -37,24 +38,26 @@ export async function POST(request: Request) {
 
         const sender = new PublicKey(accountField);
         const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
+        const recentBlockhash = await connection.getLatestBlockhash();
 
         // create spl transfer instruction
         const splTransferIx = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(100000));
-
+        console.log('splTransferIx passed');
         // create the transaction
         const transaction = new VersionedTransaction(
             new TransactionMessage({
                 payerKey: sender,
-                recentBlockhash: '11111111111111111111111111111111',
+                recentBlockhash: recentBlockhash.blockhash,
                 // add the instruction to the transaction
                 instructions: [splTransferIx]
             }).compileToV0Message()
         )
-
+        console.log('transaction passed');
         const serializedTransaction = transaction.serialize()
 
         const base64Transaction = Buffer.from(serializedTransaction).toString('base64');
-        const message = 'Thank you for your purchase of ExiledApe #518';
+        const message = 'Thank you for your purchase!';
+        console.log('base64Transaction passed');
 
         // Example response for POST request
         const data = { transaction: base64Transaction, message };
