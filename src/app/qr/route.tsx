@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
 
         // create spl transfer instruction
-        const splTransferIx = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(10000000));
+        const splTransferIx = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(100000));
 
         // create the transaction
         const transaction = new VersionedTransaction(
