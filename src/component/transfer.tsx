@@ -1,7 +1,8 @@
 import { createTransferCheckedInstruction, getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
-import { clusterApiUrl, Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { clusterApiUrl, Connection, Keypair, PublicKey } from "@solana/web3.js";
+import BigNumber from "bignumber.js";
 
-export async function createSplTransferIx(sender: PublicKey, splToken: PublicKey, MERCHANT_WALLET: PublicKey) {
+export async function createSplTransferIx(sender: PublicKey, splToken: PublicKey, MERCHANT_WALLET: PublicKey, calculateCheckoutAmount: () => BigNumber) {
     const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
     const senderInfo = await connection.getAccountInfo(sender);
     if (!senderInfo) throw new Error('sender not found');
@@ -22,8 +23,12 @@ export async function createSplTransferIx(sender: PublicKey, splToken: PublicKey
     const mint = await getMint(connection, splToken);
     if (!mint.isInitialized) throw new Error('mint not initialized');
 
+    // Calculate the order total on the server
+    let amount = calculateCheckoutAmount();
+    amount = amount.times(BigNumber(10).pow(mint.decimals)).integerValue(BigNumber.ROUND_FLOOR);
+
     // Check that the sender has enough tokens
-    const tokens = Math.floor(Number(0.2) * Math.pow(10, 6));
+    const tokens = BigInt(String(amount));
     if (tokens > senderAccount.amount) throw new Error('insufficient funds');
 
     // Create an instruction to transfer SPL tokens, asserting the mint and decimals match
@@ -39,21 +44,10 @@ export async function createSplTransferIx(sender: PublicKey, splToken: PublicKey
     // Create a reference that is unique to each checkout session
     const references = [new Keypair().publicKey];
 
-    // add references to the instruction
+    // Add references to the instruction
     for (const pubkey of references) {
         splTransferIx.keys.push({ pubkey, isWritable: false, isSigner: false });
     }
-    const transaction = new Transaction()
-    transaction.add(splTransferIx)
-        
-    const latestBlockHash = await connection.getLatestBlockhash({ commitment: "finalized" });
-    transaction.recentBlockhash = latestBlockHash.blockhash;
-    transaction.feePayer = sender;
 
-    const serializedTransaction = transaction.serialize({
-        requireAllSignatures: false,
-        verifySignatures: false,
-    });
-
-    return serializedTransaction;
+    return splTransferIx;
 }
