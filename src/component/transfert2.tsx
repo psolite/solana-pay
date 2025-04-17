@@ -1,7 +1,7 @@
-import { createAssociatedTokenAccountInstruction, createTransferCheckedInstruction, createTransferInstruction, getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
-import { Connection, Keypair, PublicKey, Transaction } from "@solana/web3.js";
+import { createAssociatedTokenAccountInstruction, createTransferInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 
-export async function createSplTransferIx(sender: PublicKey, connection: Connection, splToken: PublicKey, MERCHANT_WALLET: PublicKey, amount: BigNumber) {
+export async function createSplTransferIx(sender: PublicKey, connection: Connection, splToken: PublicKey, MERCHANT_WALLET: PublicKey) {
 
     const sourceAccountAta = await getAssociatedTokenAddress(splToken, sender);
     const destinationAccountAta = await getAssociatedTokenAddress(splToken, MERCHANT_WALLET);

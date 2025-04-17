@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clusterApiUrl, Connection, PublicKey, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
+import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { createSplTransferIx } from '@/component/transfert2';
 
@@ -38,10 +38,9 @@ export async function POST(request: Request) {
 
         const sender = new PublicKey(accountField);
         const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
-        const recentBlockhash = await connection.getLatestBlockhash();
 
         // create spl transfer
-        const serializedTransaction = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET, new BigNumber(100000));
+        const serializedTransaction = await createSplTransferIx(sender, connection, splToken, MERCHANT_WALLET);
         console.log('splTransferIx passed');
 
         const base64Transaction = serializedTransaction.toString('base64');
