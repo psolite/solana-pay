@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
     try {
+        console.log(request);
         // Example response for GET request
       
             const label = 'Exiled Apes Academy';
